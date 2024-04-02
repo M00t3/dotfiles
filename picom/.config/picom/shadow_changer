@@ -1,0 +1,10 @@
+#!/bin/bash
+cd $(dirname $0)
+
+case $1 in 
+    0)sed -i 's/.*\#shadow-dock-change/  dock = {shadow = false; full-shadow = false; focus = true; opacity = 0.99; }; #shadow-dock-change/g' ./picom.conf
+        ;;
+    1)sed -i 's/.*\#shadow-dock-change/  dock = {shadow = true; full-shadow = true; focus = true; opacity = 0.99; }; #shadow-dock-change/g' ./picom.conf
+        ;;
+esac
+
