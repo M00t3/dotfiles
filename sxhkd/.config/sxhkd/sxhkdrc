@@ -1,0 +1,190 @@
+# ------ brightness -----#
+super + alt + l
+    brightnessctl s 10%- && pkill -RTMIN+11 dwmblocks
+super + alt +  h
+    brightnessctl s 10%+ && pkill -RTMIN+11 dwmblocks
+
+#----- ipython -----#
+super + shift + p  
+ alacritty --title=ipython_dropdown -e ipython
+
+
+# ------ volome -----#
+super + alt + m      
+  bash -c "pamixer  -t ; pkill -RTMIN+10 dwmblocks"
+super + alt + k      
+  bash -c "pamixer  -i 5; pkill -RTMIN+10 dwmblocks"
+super + alt + j  
+  bash -c "pamixer  -d 5; pkill -RTMIN+10 dwmblocks"
+
+# have more than 100% volume
+# INCREASE the volume of default sink by 2.5%
+# pactl set-sink-volume @DEFAULT_SINK@ +2.5%
+
+# DECREASE the volume of default sink by 2.5%
+# pactl set-sink-volume @DEFAULT_SINK@ -2.5%
+
+# ----- Custom Music_Player Script -----#
+# play-pause
+super + alt +space 
+ ~/.config/i3/scripts/music_player.sh --pause-play 
+# previous
+super + alt +Left 
+ ~/.config/i3/scripts/music_player.sh playlist-prev  
+super + alt +o  
+ ~/.config/i3/scripts/music_player.sh playlist-prev  
+# next
+super + alt +i  
+  ~/.config/i3/scripts/music_player.sh playlist-next  
+super + alt +Right  
+ ~/.config/i3/scripts/music_player.sh playlist-next  
+# jump forward
+super + alt +Up 
+ ~/.config/i3/scripts/music_player.sh --seek-f-5  
+super + shift +bracketright 
+ ~/.config/i3/scripts/music_player.sh --seek-f-5  
+
+# jump backward
+super + shift +bracketleft 
+  ~/.config/i3/scripts/music_player.sh --seek-d-5  
+super + alt +Down 
+  ~/.config/i3/scripts/music_player.sh --seek-d-5  
+super + alt +period 
+  ~/.config/i3/scripts/music_player.sh --select-player 
+
+
+# ----- fn key functionality -----#
+XF86Mail 
+  firefox "https://mail.google.com/mail/u/0/#inbox"
+XF86HomePage
+  alacritty -e ranger
+XF86Calculator 
+  alacritty -e ipython
+XF86Search
+  firefox "https://www.ldoceonline.com/dictionary"
+XF86TouchpadToggle 
+  $HOME/.config/i3/touch_toggle.sh
+super + bracketleft 
+ $HOME/.config/i3/touch_toggle.sh
+
+# ------ search into must use site ------
+super + ctrl + p 
+ $HOME/.scripts/sites/search_in_sites.sh && xdotool key Super_L+2
+
+# ------ Headphone ------
+# headphone connect
+super + period 
+ bash -c "$HOME/.scripts/headphone -c"
+# headphone disconnect
+super + shift + period 
+ bash -c "$HOME/.scripts/headphone -d"
+
+# ------ password mamanger ------
+super + alt + 8 
+ passmenu --type
+
+# run scripts
+super + semicolon 
+ run_scripts
+
+# run ranger
+super + apostrophe 
+  bash -c "cd ~; alacritty  -e ranger"
+
+# ------ Custom Minimal player ------
+super + shift +m  
+  ~/.scripts/rofi-player/player.sh
+
+#----- clipboard -----#
+super + c 
+   rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
+
+# clipboard
+# super + c 
+#   clipmenu -i -fn 'Jetbrains Mono:size=17'
+
+# -----------
+
+# open telegram and switch into workspace 8
+super + shift  + c 
+  setsid -f /home/mostafa/apps/Telegram/Telegram  ; sleep 0.4s; xdotool key Super_L+8
+
+#----- dictionary -----#
+super + {_, ctrl, shift} +   backslash       
+ mydict {-r, -cc, -c }
+
+# dictionary config file
+super + alt backslash       
+ alacritty -e lvim $HOME/.scripts/Dict/config.sh
+# ----------------
+
+# kill program 
+super + ctrl+ k 
+ $HOME/.scripts/kill_program
+
+
+# Wifi
+super + x 
+ $HOME/.scripts/net/change_wifi.sh
+
+# disconnect wifi
+super + shift +x 
+ $HOME/.scripts/net/disconnect_wifi
+
+# File Manager
+super + shift  + e 
+ nautilus
+
+# mount usb & mobail
+super + ctrl + m 
+ $HOME/.scripts/mounting/mount_device.sh
+
+# umount usb & mobail
+super + shift +ctrl+m 
+ $HOME/.scripts/mounting/unmount_device.sh
+
+# XDM Downloader
+super + shift +d 
+ xdman
+
+# xkill command
+alt + F4
+  xkill
+
+# Open Custom Bookmark With Browser
+super + ctrl + o 
+ $HOME/.scripts/sites/open_site.sh ; 
+
+# open browser
+super + shift + f 
+  $BROWSER
+
+# spotify
+super + shift + s 
+ spotify-launcher 
+
+# ------ screanshot ------
+super + Print 
+  flameshot full -c -p $HOME/Pictures/Screenshots
+super + ctrl+Print 
+ ~/.scripts/dmenurecord
+
+Print 
+ flameshot gui 
+# $HOME/.config/i3/scripts/last_screenshot_path.sh
+
+# ------ Record Screen ------
+super + ctrl + Print 
+  ~/.scripts/dmenurecord
+
+# ------ Set Video Background ------
+super + shift + minus
+  /home/mostafa/.scripts/video_background.sh ~/.config/default_video_background.mp4
+
+# tmux
+super + shift  + t 
+ $TERMINAL -e "$HOME/.scripts/i3tmux"
+
+# ------ Custom Minimal Downloader ------
+super + F1
+  /home/mostafa/.scripts/aria-dl/ariadl
