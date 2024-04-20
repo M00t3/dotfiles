@@ -1,0 +1,57 @@
+export PAGER="nvim +Man!"
+
+# set default history file
+export HISTFILE=~/.zsh_history
+
+# How many commands to store in history
+export HISTSIZE=10000
+export SAVEHIST=10000
+
+# Share history in every terminal session
+setopt SHARE_HISTORY
+
+# fzf config
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='fd --type f --color=never --hidden'
+export FZF_DEFAULT_OPTS='--no-height --color=bg+:#343d46,gutter:-1,pointer:#ff3c3c,info:#0dbc79,hl:#0dbc79,hl+:#23d18b'
+
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :50 {}'"
+
+export FZF_ALT_C_COMMAND='fd --type d . --color=never --hidden'
+export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -50'"
+
+# export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'"
+# export FZF_CTRL_T_OPTS="--height 40% --layout=reverse --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'"
+
+# CTRL-/ to toggle small preview window to see the full command
+# CTRL-Y to copy the command into clipboard using pbcopy
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {}' --preview-window up:3:hidden:wrap
+  --bind 'ctrl-/:toggle-preview'
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --color header:italic
+  --header 'Press CTRL-Y to copy command into clipboard'"
+
+# tmux automate
+export PATH="$HOME/.tmuxifier/bin:$PATH"
+eval "$(tmuxifier init -)"
+
+# # run tmux when terminal will be open
+#  [[ "$(which tmux) " ]] && tmux attach-session -t default &>/dev/null
+
+
+# hilighting in tab
+autoload -U compinit && compinit
+zmodload -i zsh/complist
+zstyle ':completion:*' menu select
+
+# case-insensitive completion
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+# vi-append-x-selection() { RBUFFER=$(xsel -o -p </dev/null)$RBUFFER; }
+# zle -N vi-append-x-selection
+# bindkey -a '^X' vi-append-x-selection
+# vi-yank-x-selection() { print -rn -- $CUTBUFFER | xsel -i -p; }
+# zle -N vi-yank-x-selection
+# bindkey -a '^Y' vi-yank-x-selection
