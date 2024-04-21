@@ -1,0 +1,421 @@
+#!/usr/bin/env bash
+
+# +-----------+
+# |  network  |
+# +-----------+
+# ip 
+alias lip="ip -br -c a" 
+alias wip="ip -br  a |grep wlp|awk '{printf \$3}'|cut -d \/ -f 1"
+alias eip="ip -br  a |grep ent|awk '{printf \$3}'|cut -d \/ -f 1"
+
+# speed test
+alias nets="speedtest-cli --simple"
+alias wnet="$HOME/.scripts/wait_for_network.sh"
+
+# find ip address for device of local network
+function ldip() { 
+  local_ip="$(ip -c a |grep wlp |grep inet |head -n1 |awk '{print $2}' )"
+  echo "$local_ip"
+  nmap -sn "$local_ip" 
+  # if [ $local_ip ]; then
+  #   nmap -sn  $local_ip |grep -i 'nmap scan' | awk '{print $NF}'
+  # fi
+}
+
+
+# test network
+function cnet () {
+   if [[ $(curl -sIL google.com) ]];then 
+     notify-send "test network" "<span font=\"22px\">you are connetct 󰖩</span>" 
+     green-output "you are connect to network" 
+   else
+     notify-send -u critical "test network" "<span font=\"22px\">you are Disconnet 󱚵</span>"
+     red-output "you are Disconnet 󱚵"
+   fi
+}
+
+function setproxy() {
+    export {socks5,http,https,ftp}_proxy="socks5://localhost:9050"
+}
+
+# Unset Proxy
+function unsetproxy() {
+    unset {socks5,http,https,ftp}_proxy
+}
+# +------------+
+
+# +-------------------------------+
+# |  Django & python environment  |
+# +-------------------------------+
+
+# run server and open on that port 
+alias dsr="setsid -f chromium http://localhost:8111 ; python3 ./manage.py runserver 8111"
+alias dsv="source .venv/bin/activate"
+alias dmm="python ./manage.py makemigrations && python ./manage.py migrate"
+alias dmk="python ./manage.py makemigrations"
+
+alias pyt="mkdir /tmp/test_py 2>/dev/null ;sleep .8 && lvim /tmp/test_py/test_file.py"
+alias ssq="sudo systemctl start mysql && echo mysql started ..."
+
+# source virtualenv
+dv(){
+  source_file=./.venv/bin/activate
+  if [[ $1 ]];then
+    source_file=$1
+  fi
+
+  source "$source_file" 2>/dev/null
+  if [[ $? -ne 0 ]];then
+    echo "enter correct source"
+  fi
+}
+
+# run django server with select port
+ds() {
+  port=9999
+  if [[ $1 ]];then 
+    port=$1
+  fi
+  python3 ./manage.py runserver "$port"
+
+}
+
+# run server and open project with chromium
+function dsp() {
+
+  port=$1
+  # if port not set
+  if [[ ! $port ]];then 
+    port=8111
+  fi
+
+  if [[ $2 ]] && [[ $2 == "-a" ]] && [[ $(which chromium ) ]] ;then
+
+    setsid -f chromium http://localhost:"${port}" http://localhost:"${port}"/admin ; \
+        python3 ./manage.py runserver 0.0.0.0:"${port}"
+  else
+    setsid -f chromium http://localhost:"$port" ; python3 ./manage.py runserver 0.0.0.0:"$port"
+  fi
+
+}
+
+# -----------------------
+# +------------+
+# |  Makefile  |
+# +------------+
+# work with Makefiles
+alias mk="make"
+alias mc="make clean"
+alias smi="sudo make clean install"
+# +------------+
+# +------------------+
+# |  pomodoro timer  |
+# +------------------+
+
+alias work="pomo start -t work \"do some code\""
+
+function study(){
+  [[ $1 ]] && mes="$1" || mes="study for uni"
+  pomo start -t study "$mes"
+}
+
+function rbook(){
+  [[ $1 ]] && mes="$1" || mes="read book"
+  pomo start -t read_book "$mes"
+}
+
+alias spt="spt -e \"play ~/.config/dunst/mixkit-dry-pop-up-notification-alert-2356.wav\""
+# +------------------+
+# +---------------------+
+# |  package manangers  |
+# +---------------------+
+
+# # zypper package manager
+# alias zi="sudo zypper install "
+# alias zu="sudo zypper update"
+
+# pacman package mananer
+# alias pi="sudo pacman -S"
+# alias pu="sudo pacman -Syu"
+
+# void package mananger
+alias pi="sudo vpm install"
+alias pu="sudo vpm update"
+alias pre="sudo vpm remove"
+alias pse="vpm search"
+
+# +---------------------+
+# +-----------------+
+# |  cheat sheets   |
+# +-----------------+
+function hl(){
+    howdoi -a "$@" |np
+}
+
+#function chsh(){
+#    tldr $@ |less
+#    #$EDITOR -c 'set ft=man' -
+#}
+
+
+function cht(){
+    query="$@"
+    echo "${@}"
+    if [[  -n "${@}"  ]]
+    then
+        curl cht.sh/`echo "$query" |tr " " "+"` 2>/dev/null |$EDITOR +Man! -
+    else
+        echo "error"
+    fi
+
+}
+# bindkey -s '^z' 'navi^M'
+
+# +-----------------+
+# +----------------------+
+# |  Work With Markdown  |
+# +----------------------+
+# convert markdown to pdf
+function mdtpdf() {
+  pandoc "$1"  --to pdf |zathura - 
+}
+
+# convert markdown with dark theme and show in zathura
+function showmd() {
+  touch /tmp/pandoc_output.pdf \
+    && ~/.scripts/mdtpdf -i "$1" -o /tmp/pandoc_output.pdf \
+    && sleep 2 \
+    && setsid -f zathura /tmp/pandoc_output.pdf
+}
+# +----------------------+
+# +----------------+
+# |  task manager  |
+# +----------------+
+# alias t="geek-life"
+alias t="task"
+
+# +----------------+
+
+# +-------+
+# |  git  |
+# +-------+
+alias gcl="git clone"
+
+function gco() {
+    git checkout "$(git branch  |fzf)"
+}
+
+# lazy tui
+alias lg="lazygit"
+# +-------+
+# docker tui
+alias ld="lazydocker"
+
+# open file
+bindkey -s '^o' 'opf^M'
+
+# chat gpt in terminal
+alias gv="${HOME}/.scripts/gpt_vim"
+# set shortcut in zsh for run gv function
+bindkey -s '^s' 'gv^M'
+
+# go to dir
+bindkey -s '^g' 'got^M'
+# move to right for complete command
+bindkey -s '^[i' '^[[C'
+
+alias ls="lsd"
+alias l="lsd -l"
+alias ll="lsd -l"
+alias la="lsd -la"
+alias lt="lsd -latr"
+
+alias cp="cp -v"
+alias mv="mv -v"
+
+alias pps="pro-ps"
+
+# open file with default package
+alias open="xdg-open" 
+
+# youtube video finder
+alias ytfzf="ytfzf -T w3m -t" 
+
+
+# alias chromium-dev="chromium --user-data-dir=~/.cache/dev_chromium"
+
+alias rp="cd ~/repos"
+
+# show code of keyboard
+function xevf(){
+  xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'
+}
+
+alias rsync="rsync -vh --info=progress"
+# alias bat="batcat --style=plain --pager='less -R'"
+
+function fcd(){
+  cd "$(fd --hidden --type d 2>/dev/null|fzf)" || echo "error"
+}
+
+# mpv config
+alias cfmpv='$EDITOR $HOME/.config/mpv/mpv.conf'
+alias mpvf='find -type f -regex ".*mp4\|.*mkv" |fzf |xargs -I%% mpv -speed 2 "%%" &>/dev/null'
+
+
+alias list_systemctl="systemctl list-unit-files --state=enabled --state=disabled"
+
+# youtube
+alias ytm="youtube-viewer -n --no-video-info --player=mpvm"
+alias ytv="youtube-viewer --player=mpv"
+
+# spotify player
+alias lsp="~/.scripts/cli_spotify_player.sh "
+alias rsp="~/.scripts/restart_cli_spotify_player.sh"
+
+# clock
+alias xclockt="xclock -bg '#db7f50'"
+alias clock="tty-clock -c -s -t"
+
+# show time in terminal
+function ttime() {
+     watch -tc -n  .5  "date |awk '{print \$4, \$5} '|toilet -f future  "
+
+}
+
+
+# save man page to file
+function save_man() {
+    man "${1}" |tee "${1}".man
+}
+
+# show mobile screen in pc
+alias scrcpyC="scrcpy --shortcut-mod=ralt,lalt --turn-screen-off"
+
+# download file with aria2 with firefox agent header
+alias dla="aria2c -c -j1 -x5 -U 'Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0' "
+
+# file size
+alias duf="du -ah |sort -hr |less"
+# dir size
+alias dud="du -ah -d 1 |sort -hr |less"
+
+# colorize cal
+alias today="purple-output \"Today:\n \" ; yellow-output \"$(date +%r)\n\" ; cal -n 3;echo -e \"\n--------\n\"; jcal -3"
+
+# bookmarks
+alias b="buku"
+
+# share code
+alias tb="nc termbin.com 9999"
+
+# copy to clipboard
+alias cb="xclip -selection c"
+
+# paste from clipboard
+alias scb="xclip -selection c -o"
+
+# show clipboard in qr code
+function qrc() {
+  qr "$(xclip -sel clip -o )"
+}
+
+alias grep="grep --color=auto"
+
+alias xa="xargs -I%%"
+
+# show ping with color
+alias pg="grc ping 1.1.1.1"
+
+#copy adres dir fali
+alias CC="pushd ."
+
+# done notification
+alias wd="notify-send -u low "done" && spd-say "done""
+
+alias ra="ranger"
+
+alias sn="sudo $EDITOR"
+
+# alias n="$EDITOR +\":source ~/.config/lvim/config.lua\""
+alias n="lvim"
+
+alias ns="ls \"*.vim\"|xargs -r lvim -S "
+
+alias SS="sudo systemctl"
+
+# run tor and show log
+alias rtor="sudo systemctl restart tor && sudo journalctl --since now -exft Tor | grep -E '\w*%' "
+
+alias reboot="sudo reboot"
+
+alias x="chmod +x"
+alias rx="chmod -x"
+
+alias j="z"
+
+alias sl="sl -e"
+
+# white noise
+alias wn1="play -n synth brownnoise"
+
+function cowsay-c() { 
+  clear 
+  cowsay -f daemon  "${@}" |lolcat -S 1 -F ".2" -a -s 40
+}
+
+# copy file path
+function pl() {
+    readlink -f  "${@}" |xclip -selection c
+}
+
+
+function yks() {
+  yank |xclip -selection c
+}
+
+function ykl() {
+  yank -l |xclip -selection c
+}
+
+# genarate password
+gpass() {
+  if [[ $1 ]];then
+    p_len=$1
+  else
+    p_len=25
+  fi
+  cat < /dev/urandom |tr -dc "[:print:]" |head -c "$p_len"
+}
+
+# +----------------------------+
+# |  print output with color   |
+# +----------------------------+
+
+function black-output(){
+    echo -e "\x1B[30m $* \x1B[0m"
+}
+function red-output(){
+    echo -e "\x1B[31m $* \x1B[0m"
+}
+function green-output(){
+    echo -e "\x1B[32m $* \x1B[0m"
+}
+function yellow-output(){
+    echo -e "\x1B[33m $* \x1B[0m"
+}
+function blue-output(){
+    echo -e "\x1B[34m $* \x1B[0m"
+}
+function purple-output(){
+    echo -e "\x1B[35m $* \x1B[0m \c"
+}
+function cyan-output(){
+    echo -e "\x1B[36m $* \x1B[0m"
+}
+function white-output(){
+
+    echo -e "\x1B[37m $* \x1B[0m"
+}
+
++----------------------------+
