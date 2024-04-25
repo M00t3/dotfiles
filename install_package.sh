@@ -9,6 +9,9 @@ sudo xbps-install \
 	mpv ranger exa git zsh chromium \
 	rofi yt-dlp xclip curl aria2
 
+# install starship theme for zsh
+curl -sS https://starship.rs/install.sh | sh
+
 # set zsh for default shell
 chsh -s "$(which zsh)"
 
