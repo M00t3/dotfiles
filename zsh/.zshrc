@@ -2,16 +2,21 @@
 export STARSHIP_CONFIG=~/.config/starship.toml
 eval "$(starship init zsh)"
 
+check_then_run() {
+	[[ -f $1 ]] && source $1
+}
+
+
 # plugins
 source ~/.config/zsh/plugin/run_all_plugin.sh
 
 # aliases and shortcuts
 source ~/.aliases
-source ~/.shortcuts
+check_then_run ~/.shortcuts
 
 # scripts
-source ~/.scripts/zsh_script/search
-source ~/.scripts/zsh_script/youtdl
+check_then_run ~/.scripts/zsh_script/search
+check_then_run ~/.scripts/zsh_script/youtdl
 
 # variables
 source ~/.config/zsh/variables
