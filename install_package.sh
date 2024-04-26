@@ -3,11 +3,41 @@
 # Exit on errors
 set -e
 
+read -r -p "write base of your distro for select package manager: [a]rch, [d]ebian, [v]oid, [r]ed hat" response
+
+case $response in
+a)
+	package_manager="pacman"
+	;;
+d)
+	package_manager="apt"
+	;;
+v)
+	package_manager="xbps-install"
+	;;
+r)
+	package_manager="dnf"
+	;;
+*)
+	echo "Invalid option!"
+	exit 1
+	;;
+esac
+
 # install needed package
-sudo xbps-install \
+sudo "$package_manager" \
 	picom sxhkd tmux neovim sxiv \
-	mpv ranger exa git zsh chromium \
-	rofi yt-dlp xclip curl aria2
+	mpv ranger lsd git zsh chromium \
+	rofi yt-dlp xclip curl aria2 fzf qrencode \
+	ripgrep fd bat exa zathura zathura-pdf-mupdf \
+	htop btop alacritty ffmpeg qutebrowser ranger \
+	imagemagick libnotify dunst pulseaudio \
+	xorg-xbacklight xorg-xrandr feh jq xdotool
+
+if [[ $! -ne 0 ]]; then
+	echo "Failed to install package!"
+	exit 1
+fi
 
 # install starship theme for zsh
 curl -sS https://starship.rs/install.sh | sh
@@ -17,7 +47,7 @@ chsh -s "$(which zsh)"
 
 # clone zsh plugins
 clone_zsh_plugins() {
-	directory="~/.config/zsh-plugins"
+	directory="$HOME/.config/zsh-plugins"
 	mkdir -p "$directory"
 	cd "$directory" || exit
 
@@ -41,7 +71,11 @@ end
 
 clone_zsh_plugins
 
+# NOTE:
+# it have too much dependencies so I will install it manually for now
+# install nodejs, npm, golang, rust, cargo for lvim
+# python3 python3-pip nodejs npm golang rustc cargo
 # install lvim
-LV_BRANCH='release-1.3/neovim-0.9' bash <(curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.sh)
+# LV_BRANCH='release-1.3/neovim-0.9' bash <(curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.sh)
 
 echo "All packages installed successfully!"
