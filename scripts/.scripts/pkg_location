@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ ! $@ ]]; then
+  echo "enter package name"
+	exit 1
+fi
+package_name=$@
+
+readlink -f $(which "$package_name")

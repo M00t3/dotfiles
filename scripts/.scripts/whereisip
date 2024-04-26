@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+ip=$1
+curl http://ip-api.com/json/${ip} 2>/dev/null |jq

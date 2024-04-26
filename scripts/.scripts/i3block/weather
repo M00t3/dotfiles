@@ -1,0 +1,9 @@
+#!/bin/bash
+
+curl -Ss 'https://wttr.in/newyork?0&Q&T&lang=en' | cut -c 16- | head -2 |tr '\n' ' '
+
+case $BLOCK_BUTTON in
+2)
+	alacritty -e bash -c "curl -Ss 'https://wttr.in/newyork'; while true;do sleep 1;done"
+	;;
+esac

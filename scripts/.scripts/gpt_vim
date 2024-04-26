@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+command_file=/tmp/tgpt_temp.txt
+
+rm $command_file 2>/dev/null
+lvim -c "startinsert" /tmp/tgpt_temp.txt
+
+if [[ ! -f $command_file ]]; then
+	echo "file not exist"
+	exit 2
+fi
+
+commands=$(cat $command_file)
+if [[ ! $commands ]]; then
+	exit 3
+fi
+
+if [[ $1 == '--tmux' ]]; then
+	tgpt -q -w "$commands" | tee /tmp/gpt_output && less -R /tmp/gpt_output
+else
+	tgpt "$commands"
+fi

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# TODO:
+# check linux distro
+packages=`sudo apt update 2>/dev/null`
+
+echo "$packages" |grep "All packages are up to date" &>/dev/null && echo 0 \
+    || echo "$packages" |tail -n1 |cut -d" " -f1
+
+

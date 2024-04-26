@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+check_net() {
+
+	if [ "${?}" -eq 0 ]; then
+		echo "DNS :" | lolcat
+		cat /etc/resolv.conf | ct
+		echo "----"
+
+		echo "Send and Receive :" | lolcat
+		timeout 3s curl -sIL google.com >/dev/null
+		if [ "${?}" -eq 0 ]; then
+			echo "you can send and receive "
+		else
+			echo "you can't send and receive ﮖ"
+
+		fi
+		echo "----"
+
+		echo "Ping : " | lolcat
+		timeout 3s ping -c 1 -W 2 google.com >/dev/null
+		if [ "${?}" -eq 0 ]; then
+			echo "you can ping "
+		else
+			echo "you can't ping ﮖ"
+		fi
+		echo "----"
+		echo "Local Ip :" | lolcat
+		ip -br -c a | grep wlp | ct
+	else
+		echo "you can't connect to Lan ﮖ"
+	fi
+}
+
+connect() {
+	nmcli co up Wired\ connection\ 1 >/dev/null
+	if [ "${?}" -eq 0 ]; then
+		echo "connected to Lan"
+	else
+		echo "you can't connect to Lan"
+	fi
+
+}
+
+disconnect() {
+	nmcli co down Wired\ connection\ 1 >/dev/null
+	if [ "${?}" -eq 0 ]; then
+		echo "disconnect from Lan"
+	else
+		echo "you can't disconnect from Lan"
+	fi
+}
+
+fix_ip_dns() {
+	sudo dhclient
+}
+
+case "$1" in
+"-r")
+	disconnect
+	connect
+	echo '----'
+	check_net
+	;;
+"-c")
+	connect
+	echo '----'
+	check_net
+	;;
+"-d")
+	disconnect
+	;;
+"-f")
+	fix_ip_dns
+	;;
+"-ce" | "--check")
+	check_net
+	;;
+*)
+	echo "run restart mode ... "
+	disconnect
+	connect
+	echo '----'
+	check_net
+	;;
+esac

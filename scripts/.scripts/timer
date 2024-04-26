@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+banner_command="banner "
+if [[ $1 =~ [hH] ]]; then
+	endtime=$2
+	endtime=$((endtime * 60 * 60))
+fi
+
+if [[ $1 =~ [mM] ]]; then
+	endtime=$2
+	endtime=$((endtime * 60))
+fi
+
+if [[ $1 =~ [sS] ]]; then
+	endtime=$2
+fi
+
+secend=0
+clear
+while [[ $secend -lt $endtime ]]; do
+	let "secend=secend + 1"
+
+	if [ $secend -lt 60 ]; then
+		$banner_command $(echo -e "$secend s")
+	fi
+
+	if [ $secend -gt 60 ]; then
+		pmin=$((secend / 60))
+		psecond=$((secend % 60))
+		$banner_command $(echo -e "$pmin:$psecond min")
+	fi
+
+	sleep 1
+	clear
+done && notify-send -u low "time is up !"
+banner "Time is up !"
+spd-say "done"

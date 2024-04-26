@@ -1,0 +1,17 @@
+#!/bin/bash
+
+flag=0
+for i in {1..3}
+do
+    local_ip=`ip addr show dev wlp2s0 |egrep "inet \w.*/\w\w" |awk '{printf $2}'`
+    my_ip=`timeout 3 curl https://api.ipify.org 2>/dev/null`
+
+    if [ $my_ip ] ;then
+        flag=1
+        country_name=`timeout 3 curl https://api.iplocation.net/\?ip\=$my_ip  2>/dev/null| jq .country_name` 
+        echo -e "local_ip: $local_ip\npublic_ip: $my_ip\ncountry: $country_name" 
+        notify-send -u low "IP" "local_ip: $local_ip\npublic_ip: $my_ip\ncountry: $country_name"
+        break
+    fi
+done
+[ $flag = 0 ] && notify-send -t 3000 -u critical "error"

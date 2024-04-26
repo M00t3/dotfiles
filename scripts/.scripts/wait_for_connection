@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [[ $1 ]]; then
+	while true; do
+		if timeout 3s curl "$1" &>/dev/null; then
+			say "site up" && break
+		else
+			sleep 2
+		fi
+	done
+else
+	echo -e "Error:\n[X] you most write 1 arg"
+fi

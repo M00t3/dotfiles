@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+music=$@
+mpv --volume=100 --no-video --hr-seek=yes --force-seekable=yes --force-media-title="*TITLE*" "$music"

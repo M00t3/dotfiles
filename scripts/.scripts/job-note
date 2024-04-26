@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+dirs="$HOME/w/note/
+$HOME/w/todos
+"
+
+file=$(find ${dirs} -regex ".*.md" 2>/dev/null | fzf -m)
+[[ ! "$file" ]] && exit 1
+
+$EDITOR "${file}"

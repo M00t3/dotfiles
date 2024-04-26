@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# for find usbs :)
+# lsblk -p --output NAME,TRAN,TYPE,SIZE,FSTYPE,MOUNTPOINT |egrep -vi snap |awk '$2=="usb"'
+
+iso_file=$1
+usb_path=$2
+
+read -r -p "dd if=${iso_file} of=${usb_path} status=progress bs=2M [y|n]" isok
+
+if [[ $isok == "n" ]]; then
+	echo "exiting .."
+	exit 1
+fi
+
+# please be careful about dd command
+# input and output path's so important
+sudo dd if="${iso_file}" of="${usb_path}" status=progress bs=2M

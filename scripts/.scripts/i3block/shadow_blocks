@@ -1,0 +1,10 @@
+#!/bin/bash
+
+grep "  dock = {shadow = true" ~/.config/picom/picom.conf &>/dev/null \
+    && echo on || echo off
+
+case $BLOCK_BUTTON in 
+    1) grep "  dock = {shadow = true" ~/.config/picom/picom.conf &>/dev/null \
+    && ~/.config/picom/shadow_changer 0 || ~/.config/picom/shadow_changer 1
+    ;;
+esac

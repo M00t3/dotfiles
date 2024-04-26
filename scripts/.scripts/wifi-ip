@@ -1,0 +1,3 @@
+#!/usr/bin/env bash 
+
+ip -br -c a |grep "wlp2s0" |awk '{print $3}' |cut -d\/ -f1

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+xbps-query -R --search= \
+    |fzf |awk '{print $2}'
+
+#    xbps-query -R --search= \
+#| sed -Er "s/(\[\*\].*)/$( printf "\033[0;32m" )\1$( printf "\033[0m" )/"\

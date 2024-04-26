@@ -1,0 +1,11 @@
+#!/bin/bash
+
+name=`bluetoothctl info |egrep -i "name.*" | cut -d" " -f 2`
+[ $name ] && echo " $name" || echo ""
+
+case $BLOCK_BUTTON in 
+    1) ~/.scripts/headphone -c  &>/dev/null
+    ;;
+    2) ~/.scripts/headphone -d  &>/dev/null
+    ;;
+esac

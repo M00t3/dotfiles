@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cat | rofi -dmenu -i -matching fuzzy -lines 10 -width 30 -mesg 'search: '

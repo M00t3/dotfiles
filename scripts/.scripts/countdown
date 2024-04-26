@@ -1,0 +1,7 @@
+#!/usr/bin/env bash 
+
+time="$(rofi -dmenu -lines 1 -p 'set timer: ')"
+if [[ ! $time ]];then 
+  exit 2
+fi
+alacritty -e bash -c "sleep .2 ; clear;  countdown  $time " && notify-send "countdown" "end"

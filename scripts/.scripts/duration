@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+find "$1" -type f -regex ".*[mp4|mkv]" -print0 |
+	xargs -0 mplayer -vo dummy -ao dummy -identify |
+	perl -nle '/ID_LENGTH=([0-9\.]+)/ && ($t +=$1) && printf "%02d:%02d:%02d\n",$t/3600,$t/60%60,$t%60' |
+	tail -n 1 >"$1"/duration.txt
+
+duration="$(cat "$1"/duration.txt)"
+
+if [[ $duration =~ ^[0-9].* ]]; then
+	echo "$duration"
+else
+	echo "can not find any video"
+	exit 2
+fi
+
+if [ -z "$2" ]; then
+	notify='y'
+else
+	notify=$2
+fi
+
+if [ "$notify" = 'y' ]; then
+	notify-send -u low "duration" "<span font='18px'>$duration</span>"
+fi

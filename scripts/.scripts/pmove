@@ -1,0 +1,13 @@
+#!/bin/bash
+
+file_name=$1
+dir_name=$2
+
+if [ $3 ] ; then
+    search_type=$3
+else
+    search_type=f
+fi
+
+mkdir -v $dir_name 2>/dev/null
+find -maxdepth 1 -iname "*$file_name*" -type $search_type  |xargs -I{} mv -v {} $dir_name 2>/dev/null

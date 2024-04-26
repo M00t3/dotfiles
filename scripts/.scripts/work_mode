@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+run_terminal() {
+	setsid -f alacritty -e "$@"
+}
+
+run() {
+	setsid -f "$@"
+}
+
+##########
+# I3Wm
+##########
+# i3-msg workspace "10"
+# sleep .4 && i3l "autosplit" &
+
+##########
+# Fun
+##########
+# alacritty -e cava &
+# run_terminal asciiquarium
+# run_terminal bash -c "while true;do pipes.sh -t 1;done"
+# run_terminal bash -c "while true;do cbonsai -l;done"
+
+##########
+# Music
+##########
+##  Youtube And Local Music
+# run ~/.scripts/yt_music_player/player.sh
+## spotify
+run_spotify=$(echo -e "y\nn" | rofi -dmenu -lines 1 -p "run spotify ? ")
+if [[ $run_spotify == "y" ]]; then
+	run_terminal "$HOME"/.scripts/restart_cli_spotify_player.sh
+fi
+
+##########
+# Time
+##########
+# run_terminal pomo start -t work "do some code"
+
+# Timer
+run "$HOME"/.scripts/countdown_rofi
+
+##########
+# Work
+##########
+# Notion
+run chromium --incognito --app=https://www.notion.so/
+# Trello
+run chromium --incognito --app=https://trello.com/
+
+# Tmux
+run_terminal "$HOME/.scripts/i3tmux"

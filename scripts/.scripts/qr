@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo Paste your message or link to generate a QR code:
+code="$@"
+
+mkdir -p /tmp/qrcodes
+cd /tmp/qrcodes
+
+file_name="qrcode$(date +'%d_%m_%Y-%H_%M_%S').png"
+qrencode -s 18 -o "$file_name" "$code"
+
+sleep 1
+echo "QR Code has been generated as /tmp/qrcodes/qrcode/$file_name. Launching with sxiv."
+
+sxiv  "./$file_name"
+cd - &>/dev/null

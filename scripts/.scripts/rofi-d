@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cat | rofi -dmenu -lines 1 -p 'search: '

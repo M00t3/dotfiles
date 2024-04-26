@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [[ "$(pgrep play)" ]]; then
+	pkill play &>/dev/null &
+	if [ "${?}" -eq 0 ]; then
+		notify-send "Wite Noise" "it's deactivated"
+		exit 1
+	fi
+else
+	play -n synth brownnoise &>/dev/null &
+	if [ "${?}" -eq 0 ]; then
+		notify-send "Wite Noise" "it's activate"
+		exit 1
+	fi
+fi

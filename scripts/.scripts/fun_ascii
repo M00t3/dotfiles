@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+while true; do
+  tr -cd "[:print:]" </dev/urandom |head -c 1000 |lolcat  
+  sleep .1
+done

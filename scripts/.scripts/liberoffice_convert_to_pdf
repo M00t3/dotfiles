@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+file=$1
+libreoffice --headless --convert-to pdf "$file"

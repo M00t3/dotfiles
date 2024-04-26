@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo `df -h ~ | awk '{print $4}' | tail -n -1`
+case $BLOCK_BUTTON in 
+    1) x=`du -h ~/Downloads |sort -hr |head -n 10 |column -t`
+       notify-send -t 10000 -u low "<span font='18px'>Most disk usege:</span>" "<span font='18px'>$x<b></b></span>" 
+    ;;
+esac

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if [[ ! $1 || ! $2 ]]; then
+  echo "help:"
+  echo "    $(basename $0) {mem,cpu} {head size}"
+  exit 1
+fi
+
+sort_with=$1
+head_number=$(expr "$2" + 1)
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=-'%'"$sort_with" | head -n "$head_number"

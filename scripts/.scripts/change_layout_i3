@@ -1,0 +1,4 @@
+#!/bin/bash
+
+layout=`echo  -e "vstack hstack spiral 2columns 3columns companion autosplit" |rofi -sep " " -dmenu`
+i3l "$layout"

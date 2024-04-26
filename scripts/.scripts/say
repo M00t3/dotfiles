@@ -1,0 +1,3 @@
+#!/bin/bash
+
+notify-send -u low "$1" && spd-say "$1" && echo -e "\n\e[1;33m $1 \e[0m"

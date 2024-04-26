@@ -1,0 +1,5 @@
+#!/bin/bash
+
+wifi_up="`nmcli connection show |grep "\swifi\s*wlp2s0" | cut -d" " -f 1`"
+# cat $HOME/.scripts/zsh_script/wifi_list.txt |dmenu -l 30 -p "disconnect wifi:"|xargs -I{} nmcli connection down "{}"
+gksu nmcli connection down "$wifi_up" && notify-send -u low "disconnect wifi"

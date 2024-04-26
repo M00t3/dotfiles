@@ -1,0 +1,71 @@
+#!/usr/env bash
+
+function se() {
+	find -L ~/programing/notes ~/.config ~/.scripts -maxdepth 3 | fzf | xargs -I{} "$EDITOR" "{}"
+}
+
+function sev() {
+	find ~/.config ~/.scripts -maxdepth 3 | fzf | xclip -sel clipboard
+}
+
+function sc() {
+	find ~/.scripts ~/.config -maxdepth 3 | fzf | xclip -sel clip
+}
+
+function got() {
+	dir_name="$(find . -maxdepth 3 -type d | fzf)"
+	cd "$dir_name" || echo "error"
+}
+
+function vf() {
+	file=$(fzf)
+	[ "$file" ] && "$EDITOR" "$file" ||
+		return 1
+}
+
+function opf() {
+	file_name=$(fzf)
+	isDwmRun=0
+
+	if pgrep dwm; then
+		isDwmRun=1
+	fi
+	if [ "$file_name" ]; then
+		if [[ $(echo "$file_name" | grep -E "\.mp4|\.mkv|\.wmv") ]]; then
+			echo "opening with mpv ..."
+			if [[ $isDwmRun ]]; then
+				setsid -f mpv "$file_name" &>/dev/null
+				return 1
+			fi
+			setsid -f mpv "$file_name" &>/dev/null
+		elif [[ $(echo "$file_name" | grep -E "\.mp3") ]]; then
+			echo "opening with mpv ..."
+			if [[ $isDwmRun ]]; then
+				setsid -f mpv "$file_name"
+				return 1
+			fi
+			mpv "$file_name"
+		elif [[ $(echo "$file_name" | grep -E "\.png|\.jpg") ]]; then
+			echo "opening with sxiv ..."
+			if [[ $isDwmRun ]]; then
+				setsid -f sxiv "$file_name" &>/dev/null
+				return 1
+			fi
+			setsid -f sxiv "$file_name" &>/dev/null
+		elif [[ $(echo "$file_name" | grep -E "\.pdf") ]]; then
+			echo "opening with zathura ..."
+			if [[ $isDwmRun ]]; then
+				setsid -f zathura "$file_name" &>/dev/null
+				return 1
+			fi
+			setsid -f zathura "$file_name" &>/dev/null
+		elif [[ $(echo "$file_name" | grep -E "\.html") ]]; then
+			echo "opening with chromium ..."
+			setsid -f chromium "$file_name" &>/dev/null
+		else
+			echo "opening with vim ..."
+			"$EDITOR" "$file_name"
+		fi
+
+	fi
+}

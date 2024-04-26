@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+import os
+from sys import argv
+
+
+def find_files() -> list:
+    temp = os.popen('find . -regex ".*md"').read()
+    temp_list = temp.split("\n")
+    return temp_list
+
+
+def md_to_pdf(file, output_file=None):
+    dir = "/".join(file.split("/")[:-1])
+    if dir:
+        dir += "/"
+
+    pandoc_cmd = "~/.scripts/pandoc-de-theme"
+
+    fileName = file.split("/")[-1]
+    if output_file is None:
+        output_file = f'{dir}{fileName.split(".")[0]}.pdf'
+
+    os.system(f' {pandoc_cmd} "{dir}{fileName}" -o "{output_file}" &')
+
+
+def help():
+    print(
+        """
+Help:
+      [-a --all]
+          for create pdf for all markdowns in dir/sub-dir it'a (Default option)
+
+      [-i --input] {file-name}
+          for create pdf for all markdowns in dir/sub-dir
+        """
+    )
+
+
+def convert_all_md():
+    for file in find_files():
+        md_to_pdf(file)
+
+
+def main():
+    if len(argv) == 1 or argv[1] in ("-a", "--all"):
+        convert_all_md()
+
+    elif (
+        argv[1] in ("-i", "--input")
+        and argv[3] in ("-o", "--output")
+        and len(argv) == 5
+    ):
+        file = argv[2]
+        output_file = argv[4]
+        md_to_pdf(file, output_file)
+
+    elif argv[1] in ("-h", "--help"):
+        help()
+
+    else:
+        print("error !")
+        help()
+
+
+main()

@@ -1,0 +1,15 @@
+#!/bin/env bash
+languages=`echo "go python c++ c bash php"| tr " " "\n"`
+core_utils=`echo "docker xargs curl grep find mv sed mv awk git"| tr " " "\n"`
+
+selected=`printf "${languages}\n${core_utils}" | fzf`
+read -p "query: " query
+
+pager="nvim +Man! -"
+# pager=less
+# pager="nvim -c 'set ft=man' -"
+if printf ${languages} |grep -qs ${selected} ;then
+    curl cheat.sh/${selected}/`echo ${query} |tr " " "+"` |${pager}
+else
+    curl cheat.sh/${selected}~${query} |${pager}
+fi

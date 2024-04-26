@@ -1,0 +1,5 @@
+#!/bin/bash
+cd ~/.scripts/
+
+find . -type f -not -path "*/.*" | rofi -dmenu -matching fuzzy -lines 10 "run script" |
+	xargs -rI{} ~/.scripts/compiler "{}"

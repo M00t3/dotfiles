@@ -1,0 +1,10 @@
+#!/bin/bash
+
+google_p=`ping -c 1 -w 3 8.8.8.8 | tail -1 | awk '{print $4}' | cut -d"/" -f 2`
+
+if [ $google_p != "" ]
+then
+  echo -e "$google_p ms"
+else
+  echo -e "Disconnect"
+fi

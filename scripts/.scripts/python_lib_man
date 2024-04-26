@@ -1,0 +1,15 @@
+#!/bin/env bash
+
+par1=$1
+read -p "[m]ain lib, [d]ownloaded lib " lib
+case $lib in
+    m)
+        python3 -c "help($par1)"
+        ;;
+    d)
+        python3 -c "import $par1; help($par1)"
+        ;;
+    *)
+        exit 1
+        ;;
+esac

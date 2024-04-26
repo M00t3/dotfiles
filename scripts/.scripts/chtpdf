@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+SCRIPT_PATH=$(readlink -f "$0")
+SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
+cd "$SCRIPT_DIR" || exit 2
+
+cheat_query=$1
+cheat_dir=~/Documents/cheat_sh/
+
+go_to_cheat_dir() {
+	if [[ ! -d "$cheat_dir" ]]; then
+		mkdir "$cheat_dir"
+	fi
+	cd $cheat_dir || exit
+}
+
+create_cheat_sheet() {
+	file_name=$(echo "${cheat_query}" | cut -d'/' -f 1 | tr ' ' '_')
+	curl -s cheat.sh/"${cheat_query}"\?T >"${file_name}".md
+	sed -i "1s/^/\`\`\`${lang_syntax_highlight}\n/" "${file_name}".md 2>/dev/null
+	echo '```' >>"${file_name}".md
+
+	~/.scripts/mdtpdf -i "${file_name}".md -o "${file_name}".pdf
+	echo -e "$(readlink -f "${file_name}".pdf)"
+}
+
+if [ ! "$cheat_query" ]; then
+	exit
+fi
+if [ "$2" ]; then
+	lang_syntax_highlight=$2
+else
+	lang_syntax_highlight=$1
+fi
+
+export -f create_cheat_sheet
+go_to_cheat_dir
+
+file_path=$(create_cheat_sheet)
+if [[ -f "$file_path" ]]; then
+	zathura "$file_path"
+else
+	echo "file not created"
+fi

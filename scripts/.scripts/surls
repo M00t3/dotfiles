@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# +--------------------------------+
+# |  get url from file or pipline  |
+# +--------------------------------+
+
+file=$1
+if [[ $file ]];then
+  grep -oiaE "https?://[^()\\\"\\\'> ]+" "$file"
+else
+  # get input form pipline 
+  cat |grep -oiaE "https?://[^()\\\"\\\'> ]+" 
+fi

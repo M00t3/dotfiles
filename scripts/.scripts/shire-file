@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "-h" ]]; then
+	echo "$0 {file_name} [expire_hour]"
+fi
+
+file=$1
+if [[ ! $file ]]; then
+	echo "$0 {file_name}"
+fi
+
+expire_hour=$2
+if [[ ! $expire_hour ]]; then
+	expire_hour=74
+fi
+
+curl -F "file=@$file" -Fexpires=$expire_hour http://0x0.st

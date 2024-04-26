@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+while true; do
+	mem=$(free -m | sed '1d;3d' | awk '{print $3}')
+	if [[ $mem -gt 9500 ]]; then
+		notify-send -u critical 'Memory warning!!'
+	fi
+	sleep 15
+done

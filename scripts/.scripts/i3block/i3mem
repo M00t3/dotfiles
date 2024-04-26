@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo `free -h | awk '{print $7}'| cut -d i -f 1`
+case $BLOCK_BUTTON in 
+    1) x=`ps axch -o cmd:15,%mem --sort=-%mem | head`
+       notify-send -u low "<span font='18px'>mem:</span>" "<span font='18px'>$x<b></b></span>"
+    ;;
+esac

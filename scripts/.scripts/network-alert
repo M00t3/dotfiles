@@ -1,0 +1,14 @@
+#!/bin/bash
+
+minute=30
+second=$((60*$minute))
+while :
+do
+    if [[ "*unreachable" =~ "`ping -c 1 8.8.8.8`" ]]
+    then
+        spd-say "you are disconnet" ;
+    else 
+        spd-say "you are connect";
+    fi
+    sleep $second;
+done

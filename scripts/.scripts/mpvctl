@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+echo "" | socat - ~/.config/mpv/mpv_socket &>/dev/null
+
+if [[ $! -ne 0 ]]; then
+	exit 1
+fi
+
+option=$*
+echo "option is $option"
+
+case "$option" in
+
+--volume-up)
+	echo add volume +2 | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	exit 0
+	;;
+
+--volume-down)
+	echo add volume +2 | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	exit 0
+	;;
+
+--seek-f-5)
+	echo seek +5 | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	exit 0
+	;;
+
+--seek-d-5)
+	echo seek -5 | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	exit 0
+	;;
+
+--seek-f-30)
+	echo seek +30 | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	exit 0
+	;;
+--seek-d-30)
+	echo seek -30 | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	exit 0
+	;;
+
+--seek-f-60)
+	echo seek -60 | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	exit 0
+	;;
+--seek-d-60)
+	echo seek -60 | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	exit 0
+	;;
+
+--pause-play)
+	echo cycle pause | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	exit 0
+	;;
+
+--pause)
+	echo '{ "command": ["set_property", "pause", true] }' | socat - ~/.config/mpv/mpv_socket
+	exit 0
+	;;
+
+--play)
+	echo '{ "command": ["set_property", "pause", false] }' | socat - ~/.config/mpv/mpv_socket
+	exit 0
+	;;
+
+playlist-next)
+	echo playlist-next | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	;;
+
+playlist-prev)
+	echo playlist-prev | socat - ~/.config/mpv/mpv_socket &>/dev/null
+	;;
+
+*)
+	echo "unknow command !!"
+	exit 2
+	;;
+esac

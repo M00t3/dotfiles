@@ -1,0 +1,6 @@
+#!/bin/bash
+
+app_name=$(ps axch -o cmd:15 --sort=-%cpu | sort | uniq | rofi -dmenu -i -mesg "chose")
+if [[ $app_name ]]; then
+	pkill -INT "$app_name"
+fi

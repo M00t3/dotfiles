@@ -1,0 +1,47 @@
+#!/bin/bash
+# +------------------------------+
+# |  find show 10 biggest files  |
+# +------------------------------+
+
+function usage() {
+    echo "usage: "
+    echo "      ( Without optian )"
+    echo "           show 10 biggest files"
+    echo "      -v --exclude"
+    echo "           for exclude file or diractory"
+    echo "      ?"
+    echo "           for show help"
+}
+
+# without optian
+if [ ${#@} -eq 0 ];then
+    du -Sah |sort -rh |head -n 10
+    exit 1
+fi
+
+while getopts v:dfh OPTION
+do
+    case $OPTION in
+        v)
+            du -h --exclude="${OPTARG}" |sort -hr |head -n 10
+            exit 0
+            ;;
+        d)
+            du -h -d 1 |sort -hr |head -n 10
+            exit 0
+            ;;
+        f)
+            du -ah -d 1 |sort -hr |head -n 10
+            exit 0
+            ;;
+        h)
+            usage
+            exit 2
+            ;;
+        *)
+            usage
+            exit 2
+            ;;
+    esac
+done
+

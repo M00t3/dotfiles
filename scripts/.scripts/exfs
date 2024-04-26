@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# +-----------------+
+# |  extract files  |
+# +-----------------+
+
+function EXF() {
+	if [[ "$1" ]]; then
+		case "$1" in
+		*.zip)
+			echo -e "extract zip file... \n"
+			file=$1
+			filename=$(echo "$file" | awk -F".zip" '{print $1}')
+			echo "file $file"
+			echo "filename $filename"
+			unzip "$file"
+			# for create directory and copy content of zip file into it
+			# unzip "$file" -d "${filename}"
+			;;
+
+		*.rar)
+			echo -e "extract rar file... \n"
+			[[ "$2" ]] && unrar x -p"$2" "$1" ||
+				unrar x "$1"
+			echo -e "done \n"
+			;;
+		*.tar)
+			echo -e "extract tar file... \n"
+			tar -xvf "$1"
+			echo -e "done \n"
+			;;
+		*.gz)
+			echo -e "extract gzip file... \n"
+			gzip -d "$1"
+			echo -e "done \n"
+			;;
+		esac
+	fi
+}
+
+export -f EXF
+[[ "$1" ]] &&
+	pass=$1
+
+if [[ "$pass" ]]; then
+	find . -maxdepth 1 -regex ".*tar\|.*zip\|.*rar\|.*gz" |
+		xargs -I%% bash -c 'EXF "%%" '"$pass"
+else
+	find . -maxdepth 1 -regex ".*tar\|.*zip\|.*rar\|.*gz" |
+		xargs -I%% bash -c 'EXF "%%" '
+fi

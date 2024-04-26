@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+video=$1
+if [ ! $video ]; then
+	video=~/.config/defalut_video_background.mp4
+fi
+
+setsid -f nice -n 10 mpv $video \
+	--no-osc --no-osd-bar --loop-file --player-operation-mode=cplayer --no-audio --panscan=1.0 --no-input-default-bindings --fullscreen &>/dev/null
