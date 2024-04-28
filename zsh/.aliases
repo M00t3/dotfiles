@@ -252,7 +252,9 @@ function xevf(){
 }
 
 alias rsync="rsync -vh --info=progress"
-# alias bat="batcat --style=plain --pager='less -R'"
+
+alias bt="bat --style=plain --paging=never"
+alias cless="bat --style=plain --pager='less -R'"
 
 function fcd(){
   cd "$(fd --hidden --type d 2>/dev/null|fzf)" || echo "error"
