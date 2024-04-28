@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+COLOR=^c#B0814B^
+RE_CL=^d^
+
+icon=
+ping=$(timeout 2s ping -c 1 -w 3 1.1.1.1 | tail -1 | awk '{print $4}' | cut -d"/" -f 2 |cut -d\. -f1)
+
+if [[  $ping == "" ]];then
+  # ping="dis"
+  echo ""
+  exit 1
+fi
+
+# ping=$(timeout 2s ping -c 1 1.1.1.1 |tail -n1 |cut -d\= -f 2|cut -d\/ -f2)
+echo "${COLOR}P ${ping} ms $RE_CL"

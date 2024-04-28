@@ -1,0 +1,7 @@
+#!/usr/bin/env bash 
+COLOR=^c#DA9BB5^
+RE_CL=^d^
+
+wifi_name=$(iwgetid -r)
+wifi_icon=
+echo "$COLOR$wifi_icon $wifi_name$RE_CL"

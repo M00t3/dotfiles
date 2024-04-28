@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+COLOR=^c#00a78e^
+RE_CL=^d^
+
+usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')
+echo "${COLOR}Cpu $usage%$RE_CL"

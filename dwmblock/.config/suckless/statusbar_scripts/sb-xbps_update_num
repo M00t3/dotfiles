@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Update the package repository information
+
+if [[ ! $(ping -c 1 1.1.1.1 ) ]];then 
+  exit 2
+fi
+
+COLOR="^c#ABBD64^"
+RE_CL=^d^
+
+timeout 13s sudo xbps-install -Su &>/dev/null
+
+# Check for updates and count the number of packages that need updating
+updates=$(xbps-install -Mun 2>/dev/null | wc -l)
+if [[ $updates -eq 0 ]]; then
+	# echo ""
+	echo ""
+	exit 1
+fi
+echo "$COLOR  $updates $RE_CL "
+
+# Display the number of updates
+# echo "Number of packages that need to be updated: $updates"
+
+# # Optionally, you can also list the packages that need updating
+# if [ "$updates" -gt 0 ]; then
+#   echo -e "\nPackages to be updated:"
+#   xbps-install -Mun
+# fi

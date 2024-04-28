@@ -1,0 +1,66 @@
+#!/bin/bash
+COLOR=^c#a51890^
+RE_CL=^d^
+
+case $BLOCK_BUTTON in
+1) notify-send 1 ;;
+2) notify-send 2 ;;
+4) notify-send 3 ;;
+5) notify-send 4 ;;
+3) notify-send "📢 Volume module" "\- Shows volume 🔊, 🔇 if muted.
+- Middle click to mute.
+- Scroll to change." ;;
+6) "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+if [[ $(cat </etc/os-release | head -n 1 | cut -d'=' -f2 | tr -d \") == "Void" ]]; then
+	get_cornet_volume() {
+		vol=$(pamixer --get-volume)
+	}
+
+	check_mute() {
+		isMute=$(pamixer --get-mute)
+		if [[ $isMute == "true" ]]; then
+			echo "$COLOR🔇$RE_CL" && exit
+		fi
+	}
+	check_mute
+	get_cornet_volume
+
+else
+	get_cornet_volume() {
+		current=$(amixer get Master | grep -i "front left" | sed 1d | awk '{print $4}')
+		limit=$(amixer get Master | grep -i limits: | awk '{print $NF}')
+		vol=$(echo "scale=2; ($current / $limit) * 100" | bc)
+	}
+
+	check_mute() {
+		isMute=$(amixer get Master | grep -i "front left" | grep off)
+		# isMute=$(amixer get Master | grep -i "front left" | sed 1d | grep off)
+		# If muted, print 🔇 and exit.
+		if [[ $isMute ]]; then
+			echo "$COLOR🔇$RE_CL" && exit
+		fi
+	}
+
+	split() {
+		# For ommiting the . without calling and external program.
+		echo $1 | cut -d\. -f1
+	}
+	check_mute
+	get_cornet_volume
+
+	vol="$(split "$vol")"
+
+fi
+
+if [[ $vol -ge 70 ]]; then
+	icon="🔊"
+elif [[ $vol -ge 30 ]]; then
+	icon="🔉"
+elif [[ $vol -ge 1 ]]; then
+	icon="🔈"
+else
+	echo "$COLOR🔇$RE_CL" && exit
+fi
+
+echo "$COLOR$icon $vol%$RE_CL"

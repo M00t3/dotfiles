@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+COLOR=^c#0abf53^
+RE_CL=^d^
+
+home_usage=$(df -h ~ |sed 1d |awk '{print $(NF - 1) }')
+echo "${COLOR}H $home_usage$RE_CL"

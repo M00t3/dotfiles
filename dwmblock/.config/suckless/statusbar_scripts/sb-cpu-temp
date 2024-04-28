@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+COLOR=^c#A555D7^
+RE_CL=^d^
+
+icon=
+# CEL=󰔄
+CEL=""
+temp=$(cat /sys/devices/virtual/thermal/thermal_zone0/temp)
+temp=$(expr "$temp" / 1000)
+echo "$COLOR$icon $temp$CEL$RE_CL"
