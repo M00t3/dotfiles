@@ -1,0 +1,17 @@
+{
+  "typingsPath": "./typestubs",
+
+  "reportTypeshedErrors": false,
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+
+  "executionEnvironments": [
+    {
+      "root": "./",
+      "venv": "./.env",
+      "extraPaths": [
+        "./3rd-modules"
+      ]
+    }
+  ]
+}
