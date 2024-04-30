@@ -196,7 +196,7 @@ lvim.plugins = {
   },
   -- { import = "plugins" },
   {
-    "p00f/nvim-ts-rainbow"
+    url = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim"
   },
   {
     "nvim-treesitter/playground",
