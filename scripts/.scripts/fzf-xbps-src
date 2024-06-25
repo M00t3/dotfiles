@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+XBPS_SRC_DIR="$HOME/.local/share/pkgs/void-packages/"
+cd "$XBPS_SRC_DIR" || exit 2
+
+pkg="$(ls ./srcpkgs |
+	fzf --prompt="Search Void-src pkgs : " \
+		--border=rounded --margin=5% \
+		--color='fg:104,fg+:255,pointer:12,hl:255,hl+:12,header:12,prompt:255' \
+		--height 100% --reverse --header="                    Templates " \
+		--info=hidden --header-first)"
+
+DIR1=$SCRIPT_DIR
+DIR2=$SCRIPT_DIR/srcpkgs
+CHECK="$(xbps-query -s "$pkg" | wc -l)"
+
+if [ "$pkg" ]; then
+	if [ "$CHECK" -eq "1" ]; then
+		echo "$pkg already installed"
+		read -r -p "Do you want to update $pkg? [y/N] " response
+		if [[ ! $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+			exit
+		fi
+	fi
+
+	cd "$DIR1" || exit
+	git pull
+
+	cd "$DIR2" || exit
+	if [[ -d "$pkg" ]]; then
+		cd "$DIR1" || exit
+		echo "Building $pkg"
+		./xbps-src pkg "$pkg"
+		# find binpkgs -iregex ".*${pkg}.*" |head -n1 |xargs -r dirname
+		sudo xbps-install -y --repository="$DIR1"hostdir/binpkgs "$pkg"
+		if [ $? -ne 0 ]; then
+			sudo xbps-install -y --repository="$DIR1"/hostdir/binpkgs/nonfree "$pkg"
+		fi
+	else
+		echo "not found $pkg"
+		exit
+	fi
+else
+	exit
+fi
+echo "package $pkg installed successfully"
+cd "$CURRENT_DIR" || exit
