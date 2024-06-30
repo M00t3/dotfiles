@@ -3,20 +3,28 @@
 # Exit on errors
 set -e
 
-read -r -p "write base of your distro for select package manager: [a]rch, [d]ebian, [v]oid, [r]ed hat" response
+read -r -p "write base of your distro for select package manager: [a]rch, [d]ebian, [v]oid, [r]ed hat: " response
 
 case $response in
 a)
-	package_manager="pacman"
+	package_manager() {
+		sudo pacman -Sy $@
+	}
 	;;
 d)
-	package_manager="apt"
+	package_manager() {
+		sudo apt update && sudo apt install -y $@
+	}
 	;;
 v)
-	package_manager="xbps-install"
+	package_manager() {
+		sudo xbps-install -Suy && sudo xbps-install -y $@
+	}
 	;;
 r)
-	package_manager="dnf"
+	package_manager() {
+		sudo dnf check-update && sudo dnf install -y $@
+	}
 	;;
 *)
 	echo "Invalid option!"
@@ -25,7 +33,7 @@ r)
 esac
 
 # install needed package
-sudo "$package_manager" \
+package_manager \
 	picom sxhkd tmux neovim sxiv \
 	mpv ranger lsd git zsh chromium \
 	rofi yt-dlp xclip curl aria2 fzf qrencode \
@@ -33,6 +41,7 @@ sudo "$package_manager" \
 	htop btop alacritty ffmpeg qutebrowser ranger \
 	imagemagick libnotify dunst pulseaudio \
 	xorg-xbacklight xorg-xrandr feh jq xdotool
+exit
 
 if [[ $! -ne 0 ]]; then
 	echo "Failed to install package!"
