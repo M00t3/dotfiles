@@ -208,6 +208,35 @@ function gco() {
 # lazy tui
 alias lg="lazygit"
 # +-------+
+# +-----------------+
+# |  bookmark dirs  |
+# +-----------------+
+alias g="jump"
+alias s="bookmark"
+alias d="deletemark"
+alias p="showmarks"
+alias lb="showmarks"
+
+select_bookmark(){
+  select=$(showmarks|fzf)
+  if [[ !  $select ]];then
+    return
+  fi
+  jump "$(echo "$select" |awk '{print $1}')"
+}
+
+delete_bookmark(){
+  select=$(showmarks|fzf)
+  if [[ !  $select ]];then
+    return
+  fi
+  deletemark "$(echo "$select" |awk '{print $1}')"
+}
+
+alias bs="select_bookmark"
+alias bd="delete_bookmark"
+# +-------+
+
 # docker tui
 alias ld="lazydocker"
 
